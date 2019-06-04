@@ -6,19 +6,22 @@ const source = got.extend({ baseUrl: SOURCE_BASE_URL })
 
 function * getBalanceFields (html) {
   const rowMatcher = new RegExp(/<th>(.*):<\/th><td>(-?\d+,\d.) .*<\/td>/, 'gm')
-  let match = rowMatcher.exec(html)
 
-  while (match !== null) {
-    const field = match[1]
-    const value = parseFloat(match[2].split(',').join('.'))
+  do {
+    const match = rowMatcher.exec(html)
+
+    if (match === null) {
+      return
+    }
+
+    const [, field, raw] = match
+    const value = parseFloat(raw.split(',').join('.'))
 
     yield [
       field,
       value === 0 ? 0 : value // remove signed zero
     ]
-
-    match = rowMatcher.exec(html)
-  }
+  } while (true)
 }
 
 async function readBalance (clientId, sessionId) {
@@ -29,16 +32,10 @@ async function readBalance (clientId, sessionId) {
     }
   }
 
-  try {
-    const response = await source.post(`/neste-card-extranet/balance-details/${clientId}`, options)
-    const [, { output: html }] = JSON.parse(response.body)
+  const response = await source.post(`/neste-card-extranet/balance-details/${clientId}`, options)
+  const [, { output: html }] = JSON.parse(response.body)
 
-    return [...getBalanceFields(html)]
-  } catch (error) {
-    console.error('not ok', error)
-  }
-
-  return []
+  return [...getBalanceFields(html)]
 }
 
 module.exports = {
