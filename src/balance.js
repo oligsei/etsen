@@ -2,8 +2,6 @@ const got = require('got')
 
 const { SOURCE_BASE_URL, SOURCE_SESSION_KEY } = process.env
 
-const source = got.extend({ baseUrl: SOURCE_BASE_URL })
-
 function * getBalanceFields (html) {
   const rowMatcher = new RegExp(/<th>(.*):<\/th><td>(-?\d+,\d.) .*<\/td>/, 'gm')
 
@@ -26,13 +24,14 @@ function * getBalanceFields (html) {
 
 async function readBalance (clientId, sessionId) {
   const options = {
+    baseUrl: SOURCE_BASE_URL,
     headers: {
       'Content-Type': 'application/json; charset=UTF-8',
       'Cookie': `${SOURCE_SESSION_KEY}=${sessionId}`
     }
   }
 
-  const response = await source.post(`/neste-card-extranet/balance-details/${clientId}`, options)
+  const response = await got.post(`/neste-card-extranet/balance-details/${clientId}`, options)
   const [, { output: html }] = JSON.parse(response.body)
 
   return [...getBalanceFields(html)]
