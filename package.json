@@ -1,0 +1,26 @@
+{
+  "name": "etsen",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node -r dotenv/config index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/oligsei/etsen.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/oligsei/etsen/issues"
+  },
+  "homepage": "https://github.com/oligsei/etsen#readme",
+  "dependencies": {
+    "got": "9.6.0",
+    "tough-cookie": "3.0.1"
+  },
+  "devDependencies": {
+    "dotenv": "8.0.0"
+  }
+}
