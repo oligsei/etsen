@@ -18,7 +18,7 @@ async function getOAuthCode (url, cookieJar, { username, password }) {
       })
   } catch (error) {
     if (error.statusCode !== 302) {
-      console.log(error.statusCode)
+      // rethrow everything except `Found`
       throw error
     }
   }

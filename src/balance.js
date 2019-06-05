@@ -22,7 +22,7 @@ function * getBalanceFields (html) {
   } while (true)
 }
 
-async function readBalance (clientId, sessionId) {
+async function readBalance (balanceId, sessionId) {
   const options = {
     baseUrl: SOURCE_BASE_URL,
     headers: {
@@ -31,7 +31,7 @@ async function readBalance (clientId, sessionId) {
     }
   }
 
-  const response = await got.post(`/neste-card-extranet/balance-details/${clientId}`, options)
+  const response = await got.post(`/neste-card-extranet/balance-details/${balanceId}`, options)
   const [, { output: html }] = JSON.parse(response.body)
 
   return [...getBalanceFields(html)]
